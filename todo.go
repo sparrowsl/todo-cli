@@ -1,9 +1,12 @@
 package todo
 
+import "time"
+
 type item struct {
-	name      string
-	_type     string
-	completed bool
+	Task      string
+	Done      bool
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 type List []item
