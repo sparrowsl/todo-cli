@@ -17,7 +17,7 @@ func main() {
 
 	flag.Parse()
 
-	list := todo.List{}
+	list := &todo.List{}
 
 	if err := list.Get(todoFile); err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -26,7 +26,7 @@ func main() {
 
 	switch {
 	case len(os.Args) == 1:
-		for _, item := range list {
+		for _, item := range *list {
 			fmt.Println(item.Task)
 		}
 	case *deleteFlag > 0:
