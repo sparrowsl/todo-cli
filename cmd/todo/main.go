@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -11,6 +12,11 @@ import (
 const todoFile = ".todo.json"
 
 func main() {
+
+	deleteFlag := flag.Int("d", 0, "Delete an item")
+
+	flag.Parse()
+
 	list := todo.List{}
 
 	if err := list.Get(todoFile); err != nil {
@@ -23,9 +29,16 @@ func main() {
 		for _, item := range list {
 			fmt.Println(item.Task)
 		}
+	case *deleteFlag > 0:
+		if err := list.Delete(*deleteFlag); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		list.Save(todoFile)
 	default:
 		newItem := strings.Join(os.Args[1:], " ")
 		list.Add(newItem)
+
 		if err := list.Save(todoFile); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
