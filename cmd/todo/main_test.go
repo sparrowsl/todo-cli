@@ -6,7 +6,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
-	"strings"
 	"testing"
 )
 
@@ -52,18 +51,16 @@ func TestTodoCLI(t *testing.T) {
 	// eg: ~/Desktop/todo-cli/todo.exe
 	cmdPath := filepath.Join(dir, binName)
 
-	// Adding subtests to run
 	t.Run("AddNewTask", func(t *testing.T) {
-		cmd := exec.Command(cmdPath, strings.Split(task, " ")...)
+		cmd := exec.Command(cmdPath, "-task", task)
 		if err := cmd.Run(); err != nil {
 			t.Fatal(err)
 		}
 	})
 
 	t.Run("ListTasks", func(t *testing.T) {
-		cmd := exec.Command(cmdPath)
-
-		output, err := cmd.CombinedOutput()
+		cmd := exec.Command(cmdPath, "-list")
+		output, err := cmd.CombinedOutput() // Returns the output from the command executed
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -72,6 +69,20 @@ func TestTodoCLI(t *testing.T) {
 
 		if expected != string(output) {
 			t.Errorf("Expected %q, got %q instead\n", expected, string(output))
+		}
+	})
+
+	t.Run("MarkTaskComplete", func(t *testing.T) {
+		// Add a new task before checking for completed
+		addTask := exec.Command(cmdPath, "-task", task)
+		// Try to add task, error if fail
+		if err := addTask.Run(); err != nil {
+			t.Fatal(err)
+		}
+
+		cmd := exec.Command(cmdPath, "-complete", "1")
+		if err := cmd.Run(); err != nil {
+			t.Fatal(err)
 		}
 	})
 
