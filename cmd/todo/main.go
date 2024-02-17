@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/sparrowsl/todo-cli"
 )
@@ -12,8 +11,9 @@ import (
 const todoFile = ".todo.json"
 
 func main() {
-
-	deleteFlag := flag.Int("d", 0, "Delete an item")
+	listFlag := flag.Bool("list", false, "List all items in todo")
+	taskFlag := flag.String("task", "", "Add new task to the todo")
+	deleteFlag := flag.Int("delete", 0, "Delete an item")
 
 	flag.Parse()
 
@@ -25,24 +25,28 @@ func main() {
 	}
 
 	switch {
-	case len(os.Args) == 1:
+	case *listFlag:
 		for _, item := range *list {
 			fmt.Println(item.Task)
 		}
+
 	case *deleteFlag > 0:
 		if err := list.Delete(*deleteFlag); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 		list.Save(todoFile)
-	default:
-		newItem := strings.Join(os.Args[1:], " ")
-		list.Add(newItem)
+
+	case *taskFlag != "":
+		list.Add(*taskFlag)
 
 		if err := list.Save(todoFile); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
+
+	default:
+		fmt.Println("Error: invalid command!!")
 	}
 
 }
