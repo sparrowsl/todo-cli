@@ -73,14 +73,14 @@ func TestTodoCLI(t *testing.T) {
 	})
 
 	t.Run("MarkTaskComplete", func(t *testing.T) {
-		// Add a new task before checking for completed
-		addTask := exec.Command(cmdPath, "-task", task)
-		// Try to add task, error if fail
-		if err := addTask.Run(); err != nil {
+		cmd := exec.Command(cmdPath, "-complete", "1")
+		if err := cmd.Run(); err != nil {
 			t.Fatal(err)
 		}
+	})
 
-		cmd := exec.Command(cmdPath, "-complete", "1")
+	t.Run("DeleteTask", func(t *testing.T) {
+		cmd := exec.Command(cmdPath, "-delete", "1")
 		if err := cmd.Run(); err != nil {
 			t.Fatal(err)
 		}
