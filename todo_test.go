@@ -32,8 +32,7 @@ func TestComplete(t *testing.T) {
 		t.Errorf("New task should not be completed.")
 	}
 
-	list[0].Done = true // quick hack to make the test pass
-	list.Complete(1)    // Mark current list as completed
+	list.Complete(1) // Mark current list as completed
 
 	if !list[0].Done {
 		t.Errorf("New task should be completed.")
@@ -57,14 +56,14 @@ func TestDelete(t *testing.T) {
 		t.Errorf("Expected %q, got %q instead.", tasks[0], list[0].Task)
 	}
 
-	list.Delete(2)
+	list.Delete(3)
 
 	if len(list) != 2 {
 		t.Errorf("Expected list length %d, got %d instead.", 2, len(list))
 	}
 
-	if list[1].Task != tasks[2] {
-		t.Errorf("Expected %q, got %q instead.", tasks[2], list[1].Task)
+	if list[1].Task != tasks[1] {
+		t.Errorf("Expected %q, got %q instead.", tasks[1], list[1].Task)
 	}
 }
 

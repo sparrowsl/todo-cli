@@ -21,7 +21,7 @@ type List []item
 func (l *List) Complete(i int) error {
 	ls := *l
 
-	if i <= 0 || i >= len(ls) {
+	if i <= 0 || i > len(ls) {
 		return fmt.Errorf("Item %d does not exists!!\n", i)
 	}
 
@@ -49,7 +49,7 @@ func (l *List) Add(task string) {
 func (l *List) Delete(i int) error {
 	ls := *l
 
-	if i <= 0 || i >= len(ls) {
+	if i <= 0 || i > len(ls) {
 		return fmt.Errorf("Item %d does not exists!!\n", i)
 	}
 
