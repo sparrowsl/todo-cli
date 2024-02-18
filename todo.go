@@ -17,6 +17,22 @@ type item struct {
 
 type List []item
 
+func (l *List) String() string {
+	formatted := ""
+
+	for i, item := range *l {
+		prefix := "  "
+
+		if item.Done {
+			prefix = "X "
+		}
+
+		formatted = fmt.Sprintf("%s%d: %s\n", prefix, i+1, item.Task)
+	}
+
+	return formatted
+}
+
 // Marks a to-do item as completed
 func (l *List) Complete(i int) error {
 	ls := *l

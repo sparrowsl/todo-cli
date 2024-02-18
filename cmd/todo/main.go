@@ -27,11 +27,7 @@ func main() {
 
 	switch {
 	case *listFlag:
-		for _, item := range *list {
-			if !item.Done {
-				fmt.Println(item.Task)
-			}
-		}
+		fmt.Print(list)
 
 	case *deleteFlag > 0:
 		if err := list.Delete(*deleteFlag); err != nil {
