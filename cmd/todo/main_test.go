@@ -30,7 +30,7 @@ func TestMain(m *testing.M) {
 	}
 
 	fmt.Println("Running tests...")
-	result := m.Run()
+	result := m.Run() // Run all test cases below, (functions with *testing.T params)
 
 	fmt.Println("Cleaning up files...")
 	os.Remove(binName)

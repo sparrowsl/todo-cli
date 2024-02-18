@@ -27,7 +27,7 @@ func (l *List) String() string {
 			prefix = "X "
 		}
 
-		formatted = fmt.Sprintf("%s%d: %s\n", prefix, i+1, item.Task)
+		formatted += fmt.Sprintf("%s%d: %s\n", prefix, i+1, item.Task)
 	}
 
 	return formatted
