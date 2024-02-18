@@ -8,7 +8,7 @@ import (
 	"github.com/sparrowsl/todo-cli"
 )
 
-const todoFile = ".todo.json"
+var todoFile = ".todo.json"
 
 func main() {
 	listFlag := flag.Bool("list", false, "List all items in todo")
@@ -19,6 +19,10 @@ func main() {
 	flag.Parse()
 
 	list := &todo.List{}
+
+	if os.Getenv("TODO_FILENAME") != "" {
+		todoFile = os.Getenv("TODO_FILENAME")
+	}
 
 	if err := list.Get(todoFile); err != nil {
 		fmt.Fprintln(os.Stderr, err)
