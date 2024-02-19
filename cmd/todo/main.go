@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
+	"io"
 	"os"
+	"strings"
 
 	"github.com/sparrowsl/todo-cli"
 )
@@ -12,7 +15,7 @@ var todoFile = ".todo.json"
 
 func main() {
 	listFlag := flag.Bool("list", false, "List all items in todo")
-	taskFlag := flag.String("task", "", "Add new task to the todo")
+	addFlag := flag.Bool("add", false, "Add new task to the todo")
 	completedFlag := flag.Int("complete", 0, "Mark an item as completed")
 	deleteFlag := flag.Int("delete", 0, "Delete an item")
 
@@ -52,8 +55,14 @@ func main() {
 			os.Exit(1)
 		}
 
-	case *taskFlag != "":
-		list.Add(*taskFlag)
+	case *addFlag:
+		task, err := getTask(os.Stdin, flag.Args()...)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+
+		list.Add(task)
 
 		if err := list.Save(todoFile); err != nil {
 			fmt.Fprintln(os.Stderr, err)
@@ -65,4 +74,24 @@ func main() {
 		os.Exit(1)
 	}
 
+}
+
+// Decides where to get the description of a new task from; args or STDIN
+func getTask(reader io.Reader, args ...string) (string, error) {
+	if len(args) > 0 {
+		return strings.Join(args, " "), nil
+	}
+
+	scanner := bufio.NewScanner(reader)
+	scanner.Scan()
+
+	if err := scanner.Err(); err != nil {
+		return "", err
+	}
+
+	if len(scanner.Text()) == 0 {
+		return "", fmt.Errorf("Task cannot be blank")
+	}
+
+	return scanner.Text(), nil
 }
